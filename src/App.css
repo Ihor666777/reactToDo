@@ -1,3 +1,29 @@
-.App {
+#root {
   text-align: center;
 }
+
+.app {
+  text-align: center;
+  width: 50%;
+  height: 50%;
+  background-color: #00bcd480;
+  margin: 0 auto;
+}
+
+ol>li {
+  text-align: left;
+  font-size: 22px;
+}
+
+button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 4px;
+  text-align: center;
+  font-size: 13px;
+  margin: 4px 2px;
+  border-radius: 11px;
+  cursor: pointer;
+}
+
