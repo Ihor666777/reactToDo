@@ -1,60 +1,80 @@
-import React, { Component } from 'react';
-import './App.css';
-// import DeleteTodoItem from './delete_toDo_item.js'
-let keygen = require("keygenerator");
+import React, { Component } from 'react'
+import './app.sass'
+import Input from './input'
+import List from './list'
+
+const keygen = require('keygenerator')
 
 class App extends Component {
-  constructor(props){
-    super(props) 
-    this.state = {todo: JSON.parse(localStorage.getItem("toDo")) || []}
+  constructor(props) {
+    super(props)
+    this.state = {
+      todo: JSON.parse(localStorage.getItem('toDo')) || [],
+    }
+  }
+
+  createInputRef = (input) => {
+    this.input = input
+  }
+
+  isExists = () => {
+    return this.state.todo.some(k => k.item === this.input.value)
   }
 
   addItem = (e) => {
-    if(!this.input.value) {
-      e.preventDefault()
-      return 
-    } else {
-      e.preventDefault()
-      this.setState({
-        todo: this.state.todo.concat({item: this.input.value, checked: false, key: keygen._()})
+    e.preventDefault()
+    if (!this.input.value) return false
+    if (this.isExists()) return false
+    this.setState({
+      todo: this.state.todo.concat({
+        item: this.input.value,
+        checked: false,
+        key: keygen._(),
+      }),
     })
     this.input.value = ''
-   }
-  } 
-  changeCondition =(e) => {
-    this.state.todo.map((val) => {
-     if(val.item === e.target.parentElement.textContent) 
-       val.checked = !val.checked
-       localStorage.setItem('toDo', JSON.stringify(this.state.todo))
-       return; 
+  }
+
+  toggleItem = ({ target }) => {
+    return this.state.todo.map((value) => {
+      if (value.item === target.valueue) {
+        value.checked = !value.checked
+        localStorage.setItem('toDo', JSON.stringify(this.state.todo))
+      }
+      return value
     })
   }
 
+  deleteItem = (key) => {
+    this.setState((state) => ({
+      todo: state.todo.filter((item) => item.key !== key),
+    }))
+  }
+
   componentDidUpdate = (prevProps, prevState) => {
-    if (this.state.todo > prevState.todo) {
-      localStorage.setItem('toDo', JSON.stringify(this.state.todo)) 
+    if (this.state.todo !== prevState.todo) {
+      return localStorage.setItem('toDo', JSON.stringify(this.state.todo))
     }
   }
 
   render() {
     return (
-      <form onSubmit={this.addItem}>
-        <input type='text' ref={(input)=> this.input = input}/>
-        <input type='submit' value='Add' /> 
-        <div>{this.state.todo.map((toBeDone, index) => {
-            return <div key={index}><input type="checkbox" 
-            key={toBeDone.key} 
-            defaultChecked={toBeDone.checked} 
-            onClick={this.changeCondition}/>
-            {toBeDone.item}
-            {/* <DeleteTodoItem state={this.state.todo}/> */}
-            </div>
-          })}
+      <form className='container' onSubmit={this.addItem}>
+        <div className='content'>
+          <div className='input'>
+            <Input refInput={this.createInputRef} />
+          </div>
+          <div className='list'>
+            <List
+              todo={this.state.todo}
+              toggleItem={this.toggleItem}
+              deleteItem={this.deleteItem}
+            />
+          </div>
         </div>
       </form>
-    );
+    )
   }
 }
 
-export default App;
-
+export default App
