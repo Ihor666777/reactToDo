@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './app.sass'
-import Input from './input'
-import List from './list'
+import Input from './components/Input'
+import List from './components/List'
 
 const keygen = require('keygenerator')
 
@@ -18,7 +18,7 @@ class App extends Component {
   }
 
   isExists = () => {
-    return this.state.todo.some(k => k.item === this.input.value)
+    return this.state.todo.some((k) => k.item === this.input.value)
   }
 
   addItem = (e) => {
@@ -59,12 +59,12 @@ class App extends Component {
 
   render() {
     return (
-      <form className='container' onSubmit={this.addItem}>
-        <div className='content'>
-          <div className='input'>
+      <form className="container" onSubmit={this.addItem}>
+        <div className="content">
+          <div className="input">
             <Input refInput={this.createInputRef} />
           </div>
-          <div className='list'>
+          <div className="list">
             <List
               todo={this.state.todo}
               toggleItem={this.toggleItem}
